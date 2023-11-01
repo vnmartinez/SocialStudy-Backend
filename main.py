@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi import APIRouter
-from endpoints.pessoa_endpoints import router as pessoa_router
-from endpoints.publicacao_endpoints import router as publicacao_router
+from src.endpoints.pessoa_endpoints import router as pessoa_router
+from src.endpoints.publicacao_endpoints import router as publicacao_router
 
 app = FastAPI()
 
