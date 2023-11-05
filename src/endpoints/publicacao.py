@@ -1,6 +1,6 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, APIRouter
 
-router = FastAPI()
+router = APIRouter()
 
 @router.post("/publicar")
 async def root():

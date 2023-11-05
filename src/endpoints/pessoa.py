@@ -1,7 +1,6 @@
-from fastapi import FastAPI
-from fastapi import APIRouter
+from fastapi import FastAPI, APIRouter
 
-router = FastAPI()
+router = APIRouter()
 
 @router.get("/cadastrar")
 async def root():
