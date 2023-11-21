@@ -5,6 +5,7 @@ ecdsa==0.18.0
 fastapi==0.104.1
 h11==0.14.0
 idna==3.4
+psycopg2==2.9.9
 py==1.11.0
 pyasn1==0.5.1
 pydantic==2.5.1
