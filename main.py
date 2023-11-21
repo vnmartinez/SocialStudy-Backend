@@ -5,7 +5,7 @@ from src.endpoints.publicacao import router as publicacao_router
 from src.endpoints.auth import router as auth_router
 from src.database import  Base, engine
 from src.models.user import User
-from src.models.pessoa import Pessoa
+from src.models.publicacao import Publicacao
 from fastapi.middleware.cors import CORSMiddleware
 
 Base.metadata.create_all(bind=engine)
