@@ -1,8 +1,7 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, HttpUrl
 
-class CreateUserSchema(BaseModel):
+class PublicacaoSchema(BaseModel):
     titulo : str
     titulo : str 
     descricao : str
-    link : str
-    id_pessoa : int
+    link : HttpUrl

@@ -22,12 +22,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/")
-async def root():
-    return {"greeting": "Hello, World!", "message": "Welcome to FastAPI!"}
-
-app.include_router(pessoa_router, prefix="/pessoa", tags=["pessoa"])
-
 app.include_router(auth_router, prefix="/auth", tags=["login"])
 
-app.include_router(publicacao_router, prefix="/publicacao", tags=["publicacao"])
+app.include_router(pessoa_router, prefix="/pessoas", tags=["pessoa"])
+
+app.include_router(publicacao_router, prefix="/publicacoes", tags=["publicacao"])

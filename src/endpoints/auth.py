@@ -15,12 +15,5 @@ async def login(login: LoginSchema, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Usuário não encontrado")
     if user.hashed_password != login.password:
         raise HTTPException(status_code=400, detail="Senha incorreta")
-    return {"token": create_access_token(user.email)}  
-     
-@router.post("/cadastrar")
-async def cadastrar(user: CreateUserSchema, db: Session = Depends(get_db)):
-    create_user = User(email=user.email, hashed_password=user.password)
-    db.add(create_user)
-    db.commit()
-    db.refresh(create_user)
-    return create_user
+    token = create_access_token(user.email)
+    return {"token": token}
