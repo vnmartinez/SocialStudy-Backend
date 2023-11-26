@@ -3,7 +3,7 @@ from src.helpers.auth_valid import oauth2_scheme
 from sqlalchemy.orm import Session
 from src.dependencies import get_db
 from src.schemas.user import CreateUserSchema
-from src.schemas.pessoa import CreatePessoaSchema
+from src.schemas.pessoa import CreatePessoaSchema, PessoaPorEmailSchema
 from src.models.pessoa import Pessoa
 from src.models.user import User
 from src.helpers.hash_password import hash_password
@@ -36,9 +36,9 @@ async def Listar_Pessoa_Por_ID(pessoa_id: int, db: Session = Depends(get_db), to
           raise HTTPException(status_code=404, detail="Publicação não encontrada")
      return pessoa
 
-@router.get("/{email_usuario}")
-async def Listar_Pessoa_Por_Email(email_usuario: str, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
-     user.id = db.query(User.id).filter(User.email == email_usuario).first()
+@router.get("/me")
+async def Listar_Pessoa_Por_Email(email_usuario: PessoaPorEmailSchema, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
+     user.id = db.query(User.id).filter(User.email == email_usuario.email).first()
      if not user.id:
           raise HTTPException(status_code=404, detail="Usuário não encontrado")
      pessoa = db.query(Pessoa).filter(Pessoa.id_usuario == user.id).first()
