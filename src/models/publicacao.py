@@ -8,5 +8,5 @@ class Publicacao(Base):
     titulo = Column(String)
     descricao = Column(String)
     link = Column(String)
-    id_pessoa = Column(Integer)
+    id_pessoa = Column(Integer, nullable=True)
     

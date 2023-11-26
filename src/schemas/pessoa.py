@@ -7,4 +7,3 @@ class CreatePessoaSchema(BaseModel):
     cidade : str
     estado : str
     data_aniversario : date
-    id_usuario : int

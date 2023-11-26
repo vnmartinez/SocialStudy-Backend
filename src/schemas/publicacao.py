@@ -1,7 +1,10 @@
-from pydantic import BaseModel, HttpUrl
+from pydantic import BaseModel
+from typing import List
 
 class PublicacaoSchema(BaseModel):
-    titulo : str
     titulo : str 
     descricao : str
-    link : HttpUrl
+    link : str
+    
+class PublicacaoLista(BaseModel):
+    publicacoes: List[PublicacaoSchema]

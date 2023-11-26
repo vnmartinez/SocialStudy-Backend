@@ -1,13 +1,31 @@
-from fastapi import Depends, HTTPException
-from jose import jwt, jwk
-from jose.exceptions import JWTClaimsError
-from src import config
+from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from jose import JWTError, jwt
+from src.config import config
+from sqlalchemy.orm import Session
+from src.dependencies import get_db
+from src.models.user import User
 
-def authenticate_user(token: str):
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Não foi possível validar as credenciais",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    
     try:
-        payload = JWT.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        return payload["sub"]
-    except JWTClaimsError:
-        raise HTTPException(status_code=401, detail="O usuário precisa estar logado para realizar a operação")
-    except Exception:
-        raise HTTPException(status_code=400, detail="Solicitação inválida")
+        payload = jwt.decode(token, config.secret_key, algorithms=[config.algorithm])
+        user_email = payload.get("sub")
+        if user_email is None:
+            raise credentials_exception
+        
+        user = db.query(User).filter(User.email == user_email).first()
+        
+        if user is None:
+            raise credentials_exception
+        
+        return {"id": user.id, "user_info": payload}
+    except JWTError:
+        raise credentials_exception
