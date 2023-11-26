@@ -5,6 +5,7 @@ from src.config import config
 from sqlalchemy.orm import Session
 from src.dependencies import get_db
 from src.models.user import User
+from src.models.pessoa import Pessoa
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
@@ -26,6 +27,8 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = De
         if user is None:
             raise credentials_exception
         
-        return {"id": user.id, "user_info": payload}
+        pessoa = db.query(Pessoa).filter(Pessoa.id_usuario == user.id).first()
+        
+        return {"id_usuario": user.id, "id_pessoa": pessoa.id ,"user_info": payload}
     except JWTError:
         raise credentials_exception

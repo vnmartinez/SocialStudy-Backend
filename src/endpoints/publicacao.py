@@ -4,7 +4,8 @@ from src.schemas.publicacao import PublicacaoSchema, PublicacaoLista
 from src.schemas.comentario import comentarioCreate
 from src.models.publicacao import Publicacao
 from src.models.comentario import comentarios
-from sqlalchemy.orm import Session
+from src.models.pessoa import Pessoa
+from sqlalchemy.orm import Session, joinedload
 from src.dependencies import get_db
 from src.helpers.auth_valid import oauth2_scheme, get_current_user
 
@@ -12,7 +13,7 @@ router = APIRouter()
 
 @router.post("/publicar")
 async def Cria_Publicacao(publicacaoSchema: PublicacaoSchema, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme),  usuario_atual: dict = Depends(get_current_user)):
-     publicacao_criada = Publicacao(titulo=publicacaoSchema.titulo, descricao=publicacaoSchema.descricao, link=publicacaoSchema.link, id_pessoa=usuario_atual['id'])
+     publicacao_criada = Publicacao(titulo=publicacaoSchema.titulo, descricao=publicacaoSchema.descricao, link=publicacaoSchema.link, id_pessoa=usuario_atual['id_pessoa'])
      
      db.add(publicacao_criada)
      db.commit()
@@ -24,12 +25,12 @@ async def Cria_Publicacao(publicacaoSchema: PublicacaoSchema, db: Session = Depe
 
 @router.get("/")
 async def Listar_Publicacoes(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
-     lista_publicacoes = db.query(Publicacao).all()
+     lista_publicacoes = db.query(Publicacao).join(Pessoa, Publicacao.id_pessoa == Pessoa.id).options(joinedload(Publicacao.pessoa)).all()
      return {"publicacoes": lista_publicacoes}
 
 @router.get("/{publicacao_id}")
 async def Listar_Publicacao_por_ID(publicacao_id: int, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
-     publicacao = db.query(Publicacao).filter(Publicacao.id == publicacao_id).first()
+     publicacao = db.query(Publicacao).join(Pessoa, Publicacao.id_pessoa == Pessoa.id).options(joinedload(Publicacao.pessoa)).filter(Publicacao.id == publicacao_id).first()
      if not publicacao:
           raise HTTPException(status_code=404, detail="Publicação não encontrada")
      return publicacao
@@ -70,7 +71,7 @@ async def Comentar_Publicacao(publicacao_id: int, comentario: comentarioCreate, 
      publicacao = db.query(Publicacao).filter(Publicacao.id == publicacao_id).first()
      if not publicacao:
           raise HTTPException(status_code=404, detail="Publicação não encontrada")
-     comentario = comentarios.insert().values(id_publicacao=publicacao_id, comentario=comentario.texto, id_pessoa=usuario_atual['id'])
+     comentario = comentarios.insert().values(id_publicacao=publicacao_id, comentario=comentario.texto, id_pessoa=usuario_atual['id_pessoa'])
      db.execute(comentario)
      db.commit()
      return {"mensagem": "Comentário adicionado com sucesso!"}
