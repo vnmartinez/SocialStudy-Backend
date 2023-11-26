@@ -1,7 +1,9 @@
 from fastapi import FastAPI, APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from src.schemas.publicacao import PublicacaoSchema, PublicacaoLista    
+from src.schemas.comentario import comentarioCreate
 from src.models.publicacao import Publicacao
+from src.models.comentario import comentarios
 from sqlalchemy.orm import Session
 from src.dependencies import get_db
 from src.helpers.auth_valid import oauth2_scheme, get_current_user
@@ -52,3 +54,31 @@ async def Atualizar_Publicacao(publicacao_id: int, publicacao: PublicacaoSchema,
      db.commit()
      db.refresh(publicacao_atualizada)
      return {"mensagem": "Publicação atualizada com sucesso!"}
+
+@router.put("/curtir/{publicacao_id}")
+async def Curtir_Publicacao(publicacao_id: int, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
+     publicacao = db.query(Publicacao).filter(Publicacao.id == publicacao_id).first()
+     if not publicacao:
+          raise HTTPException(status_code=404, detail="Publicação não encontrada")
+     publicacao.curtidas += 1
+     db.commit()
+     db.refresh(publicacao)
+     return {"mensagem": "Publicação curtida com sucesso!"}
+
+@router.post("/comentar/{publicacao_id}")
+async def Comentar_Publicacao(publicacao_id: int, comentario: comentarioCreate, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme), usuario_atual: dict = Depends(get_current_user)):
+     publicacao = db.query(Publicacao).filter(Publicacao.id == publicacao_id).first()
+     if not publicacao:
+          raise HTTPException(status_code=404, detail="Publicação não encontrada")
+     comentario = comentarios.insert().values(id_publicacao=publicacao_id, comentario=comentario.texto, id_pessoa=usuario_atual['id'])
+     db.execute(comentario)
+     db.commit()
+     return {"mensagem": "Comentário adicionado com sucesso!"}
+
+@router.get("/comentarios/{publicacao_id}")
+async def Listar_Comentarios(publicacao_id: int, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
+     publicacao = db.query(Publicacao).filter(Publicacao.id == publicacao_id).first()
+     if not publicacao:
+          raise HTTPException(status_code=404, detail="Publicação não encontrada")
+     lista_comentarios = db.query(comentarios).filter(comentarios.c.id_publicacao == publicacao_id).all()
+     return {"comentarios": lista_comentarios}

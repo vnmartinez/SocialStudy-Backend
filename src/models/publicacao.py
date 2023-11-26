@@ -9,4 +9,5 @@ class Publicacao(Base):
     descricao = Column(String)
     link = Column(String)
     id_pessoa = Column(Integer, nullable=True)
+    like_count = Column(Integer, default=0)
     
