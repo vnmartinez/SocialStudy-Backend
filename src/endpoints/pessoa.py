@@ -44,3 +44,7 @@ async def Listar_Pessoa_Por_Email(email_usuario: str, db: Session = Depends(get_
      if not pessoa:
           raise HTTPException(status_code=404, detail="Pessoa não encontrada")
      return pessoa
+
+@router.get("/id_usuario")
+async def Listar_Pessoa_Por_ID_Usuario(id_usuario: int, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme), usuario_atual: dict = Depends(get_current_user)):
+     return {"id_usuario": usuario_atual['id']}
