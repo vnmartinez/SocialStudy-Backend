@@ -3,7 +3,7 @@ from src.helpers.auth_valid import oauth2_scheme
 from sqlalchemy.orm import Session
 from src.dependencies import get_db
 from src.schemas.user import CreateUserSchema
-from src.schemas.pessoa import CreatePessoaSchema, PessoaLista
+from src.schemas.pessoa import CreatePessoaSchema
 from src.models.pessoa import Pessoa
 from src.models.user import User
 from src.helpers.hash_password import hash_password
@@ -24,12 +24,11 @@ async def cadastrar(pessoa: CreatePessoaSchema, user: CreateUserSchema, db: Sess
     db.commit()
     return {"Mensagem": "Usuário criado com sucesso !"}
 
-@router.get("/", response_model=PessoaLista)
+@router.get("/")
 async def Listar_Pessoas(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
-     lista_pessoas = db.query(Pessoa).all()
-     return {"pessoas": lista_pessoas} 
+     return db.query(Pessoa).all()
  
-@router.get("/{pessoa_id}", response_model=CreatePessoaSchema)
+@router.get("/{pessoa_id}")
 async def Listar_Pessoa_Por_ID(pessoa_id: int, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
      pessoa = db.query(Pessoa).filter(Pessoa.id == pessoa.id).first()
      if not pessoa:

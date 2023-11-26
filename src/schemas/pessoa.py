@@ -7,6 +7,3 @@ class CreatePessoaSchema(BaseModel):
     cidade : str
     estado : str
     data_aniversario : date
-    
-class PessoaLista(BaseModel):
-    pessoas : list[CreatePessoaSchema]
