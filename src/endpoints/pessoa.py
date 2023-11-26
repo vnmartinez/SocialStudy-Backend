@@ -7,6 +7,7 @@ from src.schemas.pessoa import CreatePessoaSchema
 from src.models.pessoa import Pessoa
 from src.models.user import User
 from src.helpers.hash_password import hash_password
+from src.helpers.auth_valid import get_current_user, oauth2_scheme
 
 router = APIRouter()
 
@@ -45,6 +46,6 @@ async def Listar_Pessoa_Por_Email(email_usuario: str, db: Session = Depends(get_
           raise HTTPException(status_code=404, detail="Pessoa não encontrada")
      return pessoa
 
-@router.get("/id_usuario")
-async def Listar_Pessoa_Por_ID_Usuario(id_usuario: int, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme), usuario_atual: dict = Depends(get_current_user)):
+@router.get("/token")
+async def Retorna_ID_Usuario_Token(token: str = Depends(oauth2_scheme), usuario_atual: dict = Depends(get_current_user)): 
      return {"id_usuario": usuario_atual['id']}
