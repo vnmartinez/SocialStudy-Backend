@@ -83,3 +83,11 @@ async def Listar_Comentarios(publicacao_id: int, db: Session = Depends(get_db), 
           raise HTTPException(status_code=404, detail="Publicação não encontrada")
      lista_comentarios = db.query(comentarios).filter(comentarios.c.id_publicacao == publicacao_id).all()
      return {"comentarios": lista_comentarios}
+
+@router.get("/listar/{pessoa_id}")
+async def Listar_Publicacoes_Por_Usuario(pessoa_id: int, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
+     pessoa = db.query(Pessoa).filter(Pessoa.id == pessoa_id).all()
+     if not pessoa:
+          raise HTTPException(status_code=404, detail="Usuário não encontrado")
+     lista_publicacoes = db.query(Publicacao).filter(Publicacao.id_pessoa == pessoa_id).all()
+     return {"publicacoes": lista_publicacoes}

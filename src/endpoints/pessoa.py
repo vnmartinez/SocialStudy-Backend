@@ -36,6 +36,6 @@ async def Listar_Pessoa_Por_ID(pessoa_id: int, db: Session = Depends(get_db), to
           raise HTTPException(status_code=404, detail="Publicação não encontrada")
      return pessoa
 
-@router.get("/token/id")
+@router.get("/token/id_pessoa")
 async def Retorna_ID_Usuario_Token(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme), usuario_atual: dict = Depends(get_current_user)): 
-     return {"id_usuario": usuario_atual['id_usuario']}
+     return {"id_usuario": usuario_atual['id_pessoa']}
