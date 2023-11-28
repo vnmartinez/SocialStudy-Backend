@@ -4,6 +4,8 @@ from src.endpoints.pessoa import router as pessoa_router
 from src.endpoints.publicacao import router as publicacao_router
 from src.endpoints.auth import router as auth_router
 from src.endpoints.ranking import router as ranking_router
+from src.endpoints.curtidas import router as curtir_router
+from src.endpoints.comentarios import router as comentarios_router
 from src.database import  Base, engine
 from src.models.user import User
 from src.models.pessoa import Pessoa
@@ -34,3 +36,7 @@ app.include_router(pessoa_router, prefix="/pessoas", tags=["pessoa"])
 app.include_router(publicacao_router, prefix="/publicacoes", tags=["publicacao"])
 
 app.include_router(ranking_router, prefix="/ranking", tags=["ranking"])
+
+app.include_router(curtir_router, prefix="/curtir", tags=["curtir"])
+
+app.include_router(comentarios_router,  prefix="/comentarios", tags=["comentarios"])
