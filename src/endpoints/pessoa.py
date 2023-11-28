@@ -25,9 +25,10 @@ async def cadastrar(pessoa: CreatePessoaSchema, user: CreateUserSchema, db: Sess
     db.commit()
     return {"Mensagem": "Usuário criado com sucesso !"}
 
-@router.get("")
+@router.get("", response_model=ListaPesoas)
 async def Listar_Pessoas(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
-     return db.query(Pessoa).all()
+     pessoas = db.query(Pessoa).all()
+     return pessoas
  
 @router.get("/{pessoa_id}")
 async def Listar_Pessoa_Por_ID(pessoa_id: int, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):

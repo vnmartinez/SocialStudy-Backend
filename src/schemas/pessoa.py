@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from datetime import date
-
+from types import List  
 class CreatePessoaSchema(BaseModel):
     nome : str
     sobrenome : str
@@ -10,3 +10,6 @@ class CreatePessoaSchema(BaseModel):
     
 class PessoaPorEmailSchema(BaseModel):
     email : str
+    
+class PessoaList(BaseModel):
+    lista : List[CreatePessoaSchema]
