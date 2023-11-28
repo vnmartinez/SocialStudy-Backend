@@ -3,7 +3,7 @@ from src.helpers.auth_valid import oauth2_scheme
 from sqlalchemy.orm import Session
 from src.dependencies import get_db
 from src.schemas.user import CreateUserSchema
-from src.schemas.pessoa import CreatePessoaSchema, PessoaPorEmailSchema
+from src.schemas.pessoa import CreatePessoaSchema, PessoaPorEmailSchema,ListaPesoas 
 from src.models.pessoa import Pessoa
 from src.models.user import User
 from src.helpers.hash_password import hash_password
