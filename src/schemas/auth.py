@@ -1,5 +1,6 @@
 from pydantic import BaseModel
+from pydantic.networks import EmailStr
 
 class LoginSchema(BaseModel):
-    email: str
+    email: EmailStr 
     password: str

@@ -31,7 +31,7 @@ async def Listar_Pessoas(db: Session = Depends(get_db), token: str = Depends(oau
  
 @router.get("/{pessoa_id}")
 async def Listar_Pessoa_Por_ID(pessoa_id: int, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
-     pessoa = db.query(Pessoa).filter(Pessoa.id == pessoa.id).first()
+     pessoa = db.query(Pessoa).filter(Pessoa.id == pessoa_id).first()
      if not pessoa:
           raise HTTPException(status_code=404, detail="Publicação não encontrada")
      return pessoa
