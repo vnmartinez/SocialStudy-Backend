@@ -9,7 +9,7 @@ from src.models.user import User
 from src.models.pessoa import Pessoa
 from src.models.publicacao import Publicacao
 from src.models.comentario import comentarios
-from src.models.publicaca_lida import PublicacaoLida
+from src.models.publicacao_lida import PublicacaoLida
 from fastapi.middleware.cors import CORSMiddleware
 
 Base.metadata.create_all(bind=engine)
