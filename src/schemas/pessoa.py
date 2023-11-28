@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from datetime import date
-from types import List  
+from typing import List 
 class CreatePessoaSchema(BaseModel):
     nome : str
     sobrenome : str
