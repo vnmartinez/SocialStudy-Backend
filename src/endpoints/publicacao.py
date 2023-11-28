@@ -26,7 +26,7 @@ async def Cria_Publicacao(publicacaoSchema: PublicacaoSchema, db: Session = Depe
 @router.get("/", response_model=PublicacaoLista)
 async def Listar_Publicacoes(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
      lista_publicacoes = db.query(Publicacao).join(Pessoa, Publicacao.id_pessoa == Pessoa.id).options(joinedload(Publicacao.pessoa)).all()
-     return {"publicacoes": lista_publicacoes}
+     return lista_publicacoes
 
 @router.get("/{publicacao_id}")
 async def Listar_Publicacao_por_ID(publicacao_id: int, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):

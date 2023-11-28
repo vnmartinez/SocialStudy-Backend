@@ -16,4 +16,4 @@ async def Listar_Ranking(db: Session = Depends(get_db), token: str = Depends(oau
                             ).join(PublicacaoLida.id == Pessoa.id
                             ).group_by(PublicacaoLida.id_pessoa
                             ).order_by(func.count(PublicacaoLida.id_pessoa).desc()).all()
-    return {"ranking": lista_ranking}
+    return lista_ranking
