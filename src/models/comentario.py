@@ -9,5 +9,5 @@ class comentarios(Base):
     
     id = Column(Integer, primary_key=True, index=True)
     texto_comentario = Column(String)
-    id_pessoa = Column(Integer, ForeignKey("Pessoa.id"))
+    id_pessoa = Column(Integer, ForeignKey("pessoa.id"))
     id_publicacao = Column(Integer, ForeignKey("publicacoes.id"))

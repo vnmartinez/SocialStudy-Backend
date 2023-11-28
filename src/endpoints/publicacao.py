@@ -66,6 +66,16 @@ async def Curtir_Publicacao(publicacao_id: int, db: Session = Depends(get_db), t
      db.refresh(publicacao)
      return {"mensagem": "Publicação curtida com sucesso!"}
 
+@router.put("/descurtir/{publicacao_id}")
+async def Descurtir_Publicacao(publicacao_id: int, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
+     publicacao = db.query(Publicacao).filter(Publicacao.id == publicacao_id).first()
+     if not publicacao:
+          raise HTTPException(status_code=404, detail="Publicação não encontrada")
+     publicacao.curtidas -= 1
+     db.commit()
+     db.refresh(publicacao)
+     return {"mensagem": "Publicação descurtida com sucesso!"}
+
 @router.post("/comentar/{publicacao_id}")
 async def Comentar_Publicacao(publicacao_id: int, comentario: comentarioCreate, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme), usuario_atual: dict = Depends(get_current_user)):
      publicacao = db.query(Publicacao).filter(Publicacao.id == publicacao_id).first()
@@ -91,3 +101,14 @@ async def Listar_Publicacoes_Por_Usuario(pessoa_id: int, db: Session = Depends(g
           raise HTTPException(status_code=404, detail="Usuário não encontrado")
      lista_publicacoes = db.query(Publicacao).filter(Publicacao.id_pessoa == pessoa_id).all()
      return {"publicacoes": lista_publicacoes}
+
+@router.post("/ler/{publicacao_id}")
+async def Ler_Publicacao(publicacao_id: int, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme), usuario_atual: dict = Depends(get_current_user)):
+     publicacao = db.query(Publicacao).filter(Publicacao.id == publicacao_id).first()
+     if not publicacao:
+          raise HTTPException(status_code=404, detail="Publicação não encontrada")
+     publicacao_lida = PublicacaoLida(id_publicacao=publicacao_id, id_pessoa=usuario_atual['id_pessoa'])
+     db.add(publicacao_lida)
+     db.commit()
+     db.refresh(publicacao_lida)
+     return {"mensagem": "Publicação lida com sucesso!"}
