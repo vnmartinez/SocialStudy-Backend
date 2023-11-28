@@ -25,7 +25,7 @@ async def cadastrar(pessoa: CreatePessoaSchema, user: CreateUserSchema, db: Sess
     db.commit()
     return {"Mensagem": "Usuário criado com sucesso !"}
 
-@router.get("/")
+@router.get("")
 async def Listar_Pessoas(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
      return db.query(Pessoa).all()
  

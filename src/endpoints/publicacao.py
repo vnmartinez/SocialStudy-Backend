@@ -23,7 +23,7 @@ async def Cria_Publicacao(publicacaoSchema: PublicacaoSchema, db: Session = Depe
           raise HTTPException(status_code=400, detail="Erro ao criar publicação")
      return {"mensagem": "Publicação criada com sucesso!"}
 
-@router.get("/", response_model=PublicacaoLista)
+@router.get("", response_model=PublicacaoLista)
 async def Listar_Publicacoes(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
      lista_publicacoes = db.query(Publicacao).join(Pessoa, Publicacao.id_pessoa == Pessoa.id).options(joinedload(Publicacao.pessoa)).all()
      return lista_publicacoes
