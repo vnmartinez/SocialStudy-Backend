@@ -12,17 +12,17 @@ async def Curtir_Publicacao(publicacao_id: int, db: Session = Depends(get_db), t
      publicacao = db.query(Publicacao).filter(Publicacao.id == publicacao_id).first()
      if not publicacao:
           raise HTTPException(status_code=404, detail="Publicação não encontrada")
-     publicacao.curtidas += 1
+     publicacao.like_count += 1
      db.commit()
      db.refresh(publicacao)
-     return {"mensagem": "Publicação curtida com sucesso!"}
+     return {"mensagem": "Publicação curtida com sucesso!", "like_count": publicacao.like_count}
 
 @router.put("/{publicacao_id}")
 async def Descurtir_Publicacao(publicacao_id: int, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
      publicacao = db.query(Publicacao).filter(Publicacao.id == publicacao_id).first()
      if not publicacao:
           raise HTTPException(status_code=404, detail="Publicação não encontrada")
-     publicacao.curtidas -= 1
+     publicacao.like_count -= 1
      db.commit()
      db.refresh(publicacao)
-     return {"mensagem": "Publicação descurtida com sucesso!"}
+     return {"mensagem": "Publicação descurtida com sucesso!", "like_count": publicacao.like_count}

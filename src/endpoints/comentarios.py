@@ -5,6 +5,7 @@ from src.models.publicacao import Publicacao
 from src.dependencies import get_db
 from src.helpers.auth_valid import oauth2_scheme, get_current_user
 from src.schemas.comentario import comentarioCreate
+from src.models.comentario import comentarios
 
 router = APIRouter()
 
@@ -13,8 +14,8 @@ async def Comentar_Publicacao(publicacao_id: int, comentario: comentarioCreate, 
      publicacao = db.query(Publicacao).filter(Publicacao.id == publicacao_id).first()
      if not publicacao:
           raise HTTPException(status_code=404, detail="Publicação não encontrada")
-     comentario = comentarios.insert().values(id_publicacao=publicacao_id, comentario=comentario.texto, id_pessoa=usuario_atual['id_pessoa'])
-     db.execute(comentario)
+     novo_comentario = comentarios(id_publicacao=publicacao_id, texto_comentario=comentario.texto_comentario, id_pessoa=usuario_atual['id_pessoa'])
+     db.add(novo_comentario)
      db.commit()
      return {"mensagem": "Comentário adicionado com sucesso!"}
 
@@ -23,5 +24,5 @@ async def Listar_Comentarios(publicacao_id: int, db: Session = Depends(get_db), 
      publicacao = db.query(Publicacao).filter(Publicacao.id == publicacao_id).first()
      if not publicacao:
           raise HTTPException(status_code=404, detail="Publicação não encontrada")
-     lista_comentarios = db.query(comentarios).filter(comentarios.c.id_publicacao == publicacao_id).all()
+     lista_comentarios = db.query(comentarios).filter(comentarios.id_publicacao == publicacao_id).all()
      return {"comentarios": lista_comentarios}
