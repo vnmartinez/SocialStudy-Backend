@@ -1,6 +1,7 @@
 from src.database import Base
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
+from src.models.pessoa import Pessoa
 
 class Publicacao(Base):
     __tablename__ = "publicacoes"
@@ -12,5 +13,5 @@ class Publicacao(Base):
     id_pessoa = Column(Integer, ForeignKey("pessoa.id"))
     like_count = Column(Integer, default=0)
     
-    pessoa = relationship("pessoa")
+    pessoa = relationship(Pessoa)
     
