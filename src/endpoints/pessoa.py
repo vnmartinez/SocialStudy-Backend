@@ -3,11 +3,13 @@ from src.helpers.auth_valid import oauth2_scheme
 from sqlalchemy.orm import Session
 from src.dependencies import get_db
 from src.schemas.user import CreateUserSchema
-from src.schemas.pessoa import CreatePessoaSchema, PessoaPorEmailSchema, PessoaList 
+from src.schemas.pessoa import CreatePessoaSchema, PessoasList, PessoaGet 
 from src.models.pessoa import Pessoa
 from src.models.user import User
 from src.helpers.hash_password import hash_password
 from src.helpers.auth_valid import get_current_user, oauth2_scheme
+from src.helpers.jwt import create_access_token
+from src.endpoints.auth import login
 
 router = APIRouter()
 
@@ -23,9 +25,13 @@ async def cadastrar(pessoa: CreatePessoaSchema, user: CreateUserSchema, db: Sess
     create_pessoa = Pessoa(nome=pessoa.nome, sobrenome=pessoa.sobrenome, cidade=pessoa.cidade, estado=pessoa.estado, data_aniversario=pessoa.data_aniversario, id_usuario=id_usuario.id)
     db.add(create_pessoa)
     db.commit()
-    return {"Mensagem": "Usuário criado com sucesso !"}
+    db.refresh(create_pessoa)
+    if not create_pessoa:
+       raise HTTPException(status_code=400, detail="Erro ao criar usuário")
+    token = create_access_token(user.email)
+    return {"Mensagem": "Usuário criado com sucesso !", "token": token}
 
-@router.get("", response_model=PessoaList)
+@router.get("", response_model=PessoasList)
 async def Listar_Pessoas(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
      pessoas = db.query(Pessoa).all()
      return pessoas

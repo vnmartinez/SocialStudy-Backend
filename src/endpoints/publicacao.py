@@ -1,6 +1,6 @@
 from fastapi import FastAPI, APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from src.schemas.publicacao import PublicacaoSchema, PublicacaoLista    
+from src.schemas.publicacao import PublicacaoSchema, PublicacaoLista, PublicacaoPessoa, PublicacaoPessoaLista   
 from src.schemas.comentario import comentarioCreate
 from src.models.publicacao import Publicacao
 from src.models.comentario import comentarios
@@ -23,12 +23,12 @@ async def Cria_Publicacao(publicacaoSchema: PublicacaoSchema, db: Session = Depe
           raise HTTPException(status_code=400, detail="Erro ao criar publicação")
      return {"mensagem": "Publicação criada com sucesso!"}
 
-@router.get("", response_model=PublicacaoLista)
+@router.get("", response_model=PublicacaoPessoaLista)
 async def Listar_Publicacoes(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
      lista_publicacoes = db.query(Publicacao).join(Pessoa, Publicacao.id_pessoa == Pessoa.id).options(joinedload(Publicacao.pessoa)).all()
      if not lista_publicacoes:
           raise HTTPException(status_code=404, detail="Nenhuma publicação encontrada")
-     return lista_publicacoes
+     return {"publicacoes": lista_publicacoes}
 
 @router.get("/{publicacao_id}")
 async def Listar_Publicacao_por_ID(publicacao_id: int, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
