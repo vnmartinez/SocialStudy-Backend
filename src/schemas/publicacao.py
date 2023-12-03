@@ -20,3 +20,9 @@ class PublicacaoPessoa(BaseModel):
 
 class PublicacaoPessoaLista(BaseModel):
     publicacoes: List[PublicacaoPessoa]
+    
+class PublicacaoCreate(BaseModel):
+    titulo : str
+    descricao : str
+    link : str
+    

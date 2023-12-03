@@ -1,6 +1,6 @@
 from fastapi import FastAPI, APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from src.schemas.publicacao import PublicacaoSchema, PublicacaoLista, PublicacaoPessoa, PublicacaoPessoaLista   
+from src.schemas.publicacao import PublicacaoSchema, PublicacaoLista, PublicacaoPessoa, PublicacaoPessoaLista, PublicacaoCreate
 from src.schemas.comentario import comentarioCreate
 from src.models.publicacao import Publicacao
 from src.models.comentario import comentarios
@@ -13,8 +13,8 @@ from src.helpers.auth_valid import oauth2_scheme, get_current_user
 router = APIRouter()
 
 @router.post("/publicar")
-async def Cria_Publicacao(publicacaoSchema: PublicacaoSchema, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme),  usuario_atual: dict = Depends(get_current_user)):
-     publicacao_criada = Publicacao(titulo=publicacaoSchema.titulo, descricao=publicacaoSchema.descricao, link=publicacaoSchema.link, id_pessoa=usuario_atual['id_pessoa'])
+async def Cria_Publicacao(publicacaocreate: PublicacaoCreate, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme),  usuario_atual: dict = Depends(get_current_user)):
+     publicacao_criada = Publicacao(titulo=publicacaocreate.titulo, descricao=publicacaocreate.descricao, link=publicacaocreate.link, id_pessoa=usuario_atual['id_pessoa'])
      
      db.add(publicacao_criada)
      db.commit()
@@ -48,7 +48,7 @@ async def Deletar_Publicacao(publicacao_id: int, db: Session = Depends(get_db), 
      return {"mensagem": "Publicação deletada com sucesso!"}
 
 @router.put("/{publicacao_id}")
-async def Atualizar_Publicacao(publicacao_id: int, publicacao: PublicacaoSchema, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
+async def Atualizar_Publicacao(publicacao_id: int, publicacao: PublicacaoCreate, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
      publicacao_atualizada = db.query(Publicacao).filter(Publicacao.id == publicacao_id).first()
      if not publicacao_atualizada:
           raise HTTPException(status_code=404, detail="Publicação não encontrada")
