@@ -12,7 +12,7 @@ from src.models.pessoa import Pessoa
 router = APIRouter()
 
 @router.get("/leitura", response_model=ListaRankingLeitura)
-async def Listar_Ranking_Publicacao(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
+async def Listar_Ranking_Leitura(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
     lista_ranking = db.query(PublicacaoLida.id_pessoa,
                              func.concat(Pessoa.nome,' ',Pessoa.sobrenome).label("pessoa_nome"),
                              func.count(PublicacaoLida.id_pessoa).label("total_lido")
@@ -24,7 +24,7 @@ async def Listar_Ranking_Publicacao(db: Session = Depends(get_db), token: str = 
     return {"ranking_leitura": lista_ranking}
 
 @router.get("/publicacao", response_model=ListaRankingPublicacao)
-async def Listar_Ranking_Leitura(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
+async def Listar_Ranking_Publicacao(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
     lista_ranking = db.query(Publicacao.id_pessoa,
                              func.concat(Pessoa.nome,' ',Pessoa.sobrenome).label("pessoa_nome"),
                              func.count(Publicacao.id_pessoa).label("total_publicado")
