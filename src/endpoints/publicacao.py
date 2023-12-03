@@ -26,7 +26,7 @@ async def Cria_Publicacao(publicacaocreate: PublicacaoCreate, db: Session = Depe
 
 @router.get("", response_model=PublicacaoPessoaLista)
 async def Listar_Publicacoes(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
-     lista_publicacoes = db.query(Publicacao).join(Pessoa, Publicacao.id_pessoa == Pessoa.id).options(joinedload(Publicacao.pessoa)).all()
+     lista_publicacoes = db.query(Publicacao).join(Pessoa, Publicacao.id_pessoa == Pessoa.id).options(joinedload(Publicacao.pessoa)).order_by(Publicacao.id.desc()).all()
      if not lista_publicacoes:
           raise HTTPException(status_code=404, detail="Nenhuma publicação encontrada")
      return {"publicacoes": lista_publicacoes}
