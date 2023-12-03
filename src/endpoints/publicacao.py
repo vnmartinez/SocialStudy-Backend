@@ -4,6 +4,7 @@ from src.schemas.publicacao import PublicacaoSchema, PublicacaoLista, Publicacao
 from src.schemas.comentario import comentarioCreate
 from src.models.publicacao import Publicacao
 from src.models.comentario import comentarios
+from src.models.publicacao_lida import PublicacaoLida
 from src.models.pessoa import Pessoa
 from sqlalchemy.orm import Session, joinedload
 from src.dependencies import get_db

@@ -12,8 +12,10 @@ router = APIRouter()
 
 @router.get("", response_model=ListaRanking)
 async def Listar_Ranking(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
-    lista_ranking = db.query(PublicacaoLida.id_pessoa, func.concat(Pessoa.nome,'',Pessoa.sobrenome), func.count(PublicacaoLida.id_pessoa)
-                            ).join(PublicacaoLida.id == Pessoa.id
-                            ).group_by(PublicacaoLida.id_pessoa
+    lista_ranking = db.query(PublicacaoLida.id_pessoa,
+                             func.concat(Pessoa.nome,' ',Pessoa.sobrenome).label("pessoa_nome"),
+                             func.count(PublicacaoLida.id_pessoa).label("total_lido")
+                            ).join(Pessoa, PublicacaoLida.id_pessoa == Pessoa.id
+                            ).group_by(PublicacaoLida.id_pessoa, "pessoa_nome"
                             ).order_by(func.count(PublicacaoLida.id_pessoa).desc()).all()
-    return lista_ranking
+    return {"ranking": lista_ranking}
