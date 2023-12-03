@@ -16,6 +16,7 @@ class PublicacaoPessoa(BaseModel):
     titulo : str 
     descricao : str
     link : str
+    like_count :int
     pessoa : PessoaGet
 
 class PublicacaoPessoaLista(BaseModel):
