@@ -34,7 +34,7 @@ async def cadastrar(pessoa: CreatePessoaSchema, user: CreateUserSchema, db: Sess
 @router.get("", response_model=PessoasList)
 async def Listar_Pessoas(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
      pessoas = db.query(Pessoa).all()
-     return pessoas
+     return {"pessoas": pessoas}
  
 @router.get("/{pessoa_id}")
 async def Listar_Pessoa_Por_ID(pessoa_id: int, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
