@@ -7,7 +7,7 @@ from src.helpers.auth_valid import oauth2_scheme, get_current_user
 from src.schemas.comentario import comentarioCreate
 from src.models.comentario import comentarios
 from src.models.pessoa import Pessoa
-from sqlalchemy import func 
+from sqlalchemy import func
 
 router = APIRouter()
 
@@ -24,7 +24,7 @@ async def Comentar_Publicacao(publicacao_id: int, comentario: comentarioCreate, 
 @router.get("/{publicacao_id}")
 async def Listar_Comentarios(publicacao_id: int, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
      publicacao = db.query(Publicacao).filter(Publicacao.id == publicacao_id).first()
-     pessoa_nome = db.query(concat(Pessoa.nome, ' ', Pessoa.sobrenome).label('nome_completo')).filter(Pessoa.id == comentarios.id_pessoa).first()
+     pessoa_nome = db.query(func.concat(Pessoa.nome, ' ', Pessoa.sobrenome).label('nome_completo')).filter(Pessoa.id == comentarios.id_pessoa).first()
      if not publicacao:
           raise HTTPException(status_code=404, detail="Publicação não encontrada")
      lista_comentarios = db.query(comentarios).filter(comentarios.id_publicacao == publicacao_id).all()
