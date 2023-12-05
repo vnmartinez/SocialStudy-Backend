@@ -7,6 +7,7 @@ from src.helpers.auth_valid import oauth2_scheme, get_current_user
 from src.schemas.comentario import comentarioCreate
 from src.models.comentario import comentarios
 from src.models.pessoa import Pessoa
+from sqlalchemy import func 
 
 router = APIRouter()
 
