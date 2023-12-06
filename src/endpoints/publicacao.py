@@ -77,3 +77,10 @@ async def Ler_Publicacao(publicacao_id: int, db: Session = Depends(get_db), toke
      db.commit()
      db.refresh(publicacao_lida)
      return {"mensagem": "Publicação lida com sucesso!"}
+
+@router.get("/compartilhar/{publicacao_id}")
+async def Listar_Publicacao_por_ID(publicacao_id: int, db: Session = Depends(get_db)):
+     publicacao = db.query(Publicacao).join(Pessoa, Publicacao.id_pessoa == Pessoa.id).options(joinedload(Publicacao.pessoa)).filter(Publicacao.id == publicacao_id).first()
+     if not publicacao:
+          raise HTTPException(status_code=404, detail="Publicação não encontrada")
+     return publicacao
