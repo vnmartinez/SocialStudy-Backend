@@ -37,7 +37,7 @@ async def Listar_Publicacao_por_ID(publicacao_id: int, db: Session = Depends(get
      if not publicacao:
           raise HTTPException(status_code=404, detail="Publicação não encontrada")
      return publicacao
-
+'''
 @router.delete("/{publicacao_id}")
 async def Deletar_Publicacao(publicacao_id: int, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
      publicacao = db.query(Publicacao).filter(Publicacao.id == publicacao_id).first()
@@ -46,7 +46,7 @@ async def Deletar_Publicacao(publicacao_id: int, db: Session = Depends(get_db), 
      db.delete(publicacao)
      db.commit()
      return {"mensagem": "Publicação deletada com sucesso!"}
-
+'''
 @router.put("/{publicacao_id}")
 async def Atualizar_Publicacao(publicacao_id: int, publicacao: PublicacaoCreate, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
      publicacao_atualizada = db.query(Publicacao).filter(Publicacao.id == publicacao_id).first()
