@@ -46,7 +46,7 @@ async def Deletar_Publicacao(publicacao_id: int, db: Session = Depends(get_db), 
      db.delete(publicacao)
      db.commit()
      return {"mensagem": "Publicação deletada com sucesso!"}
-'''
+
 @router.put("/{publicacao_id}")
 async def Atualizar_Publicacao(publicacao_id: int, publicacao: PublicacaoCreate, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
      publicacao_atualizada = db.query(Publicacao).filter(Publicacao.id == publicacao_id).first()
@@ -58,7 +58,7 @@ async def Atualizar_Publicacao(publicacao_id: int, publicacao: PublicacaoCreate,
      db.commit()
      db.refresh(publicacao_atualizada)
      return {"mensagem": "Publicação atualizada com sucesso!"}
-
+'''
 @router.get("/listar/{pessoa_id}")
 async def Listar_Publicacoes_Por_Usuario(pessoa_id: int, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
      pessoa = db.query(Pessoa).filter(Pessoa.id == pessoa_id).all()
